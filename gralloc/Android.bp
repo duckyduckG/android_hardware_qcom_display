@@ -88,9 +88,27 @@ cc_library_shared {
     ],
 }
 
+soong_config_module_type {
+    name: "target_board_platform_cc_library_shared",
+    module_type: "cc_library_shared",
+    config_namespace: "ANDROID",
+    value_variables: ["target_board_platform"],
+    properties: [
+        "name",
+    ],
+}
+
 //gralloc.qcom
-cc_library_shared {
+target_board_platform_cc_library_shared {
     name: "gralloc.qcom",
+    soong_config_variables: {
+        target_board_platform: {
+            name: "gralloc.%s",
+            conditions_default: {
+                name: "gralloc.qcom",
+            },
+        },
+    },
     defaults: ["qtidisplay_defaults"],
     vendor: true,
     relative_install_path: "hw",
