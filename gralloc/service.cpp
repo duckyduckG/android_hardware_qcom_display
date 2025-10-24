@@ -46,7 +46,7 @@ int main(int, char **) {
   }
   ALOGI("Initialized qti-allocator 3");
 
-#ifdef TARGET_USES_GRALLOC4
+#if 1
   android::sp<IQtiAllocator4> service4 =
       new vendor::qti::hardware::display::allocator::V4_0::implementation::QtiAllocator();
   if (service4->registerAsService() != android::OK) {
