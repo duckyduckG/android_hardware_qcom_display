@@ -1305,15 +1305,7 @@ void HWDeviceDRM::SetupAtomic(Fence::ScopedRef &scoped_ref, HWLayers *hw_layers,
         if (update_config) {
           drm_atomic_intf_->Perform(DRMOps::PLANE_SET_ALPHA, pipe_id, layer.plane_alpha);
 
-#ifdef UDFPS_ZPOS
-          uint32_t z_order = pipe_info->z_order;
-          if (layer.flags.fod_pressed) {
-            z_order |= FOD_PRESSED_LAYER_ZORDER;
-          }
-          drm_atomic_intf_->Perform(DRMOps::PLANE_SET_ZORDER, pipe_id, z_order);
-#else
           drm_atomic_intf_->Perform(DRMOps::PLANE_SET_ZORDER, pipe_id, pipe_info->z_order);
-#endif
 
           // Account for PMA block activation directly at translation time to preserve layer
           // blending definition and avoid issues when a layer structure is reused.
@@ -1574,7 +1566,7 @@ DisplayError HWDeviceDRM::Commit(HWLayers *hw_layers) {
   } else {
     err = AtomicCommit(hw_layers);
   }
-
+  secure_inactive_pending_commit_ = false;
   return err;
 }
 
@@ -1993,7 +1985,23 @@ DisplayError HWDeviceDRM::SetRefreshRate(uint32_t refresh_rate) {
   return kErrorNotSupported;
 }
 
-
+DisplayError HWDeviceDRM::GetConfigIndexForFps(uint32_t refresh_rate, uint32_t *config) {
+  // Check if requested refresh rate is valid
+  drmModeModeInfo current_mode = connector_info_.modes[current_mode_index_].mode;
+  uint64_t current_bit_clk = connector_info_.modes[current_mode_index_].bit_clk_rate;
+  for (uint32_t mode_index = 0; mode_index < connector_info_.modes.size(); mode_index++) {
+    if ((current_mode.vdisplay == connector_info_.modes[mode_index].mode.vdisplay) &&
+        (current_mode.hdisplay == connector_info_.modes[mode_index].mode.hdisplay) &&
+        (current_bit_clk == connector_info_.modes[mode_index].bit_clk_rate) &&
+        (current_mode.flags == connector_info_.modes[mode_index].mode.flags) &&
+        (refresh_rate == connector_info_.modes[mode_index].mode.vrefresh)) {
+      *config = mode_index;
+      DLOGV_IF(kTagDriverConfig, "Config index for fps %d is %d", refresh_rate, *config);
+      return kErrorNone;
+    }
+  }
+  return kErrorNotSupported;
+}
 
 DisplayError HWDeviceDRM::GetHWScanInfo(HWScanInfo *scan_info) {
   return kErrorNotSupported;
@@ -2451,6 +2459,7 @@ DisplayError HWDeviceDRM::NullCommit(bool synchronous, bool retain_planes) {
   if (first_null_cycle_)
     first_null_cycle_ = false;
 
+  secure_inactive_pending_commit_ = false;
   return kErrorNone;
 }
 
@@ -2657,4 +2666,12 @@ void HWDeviceDRM::GetTopologySplit(HWTopology hw_topology, uint32_t *split_numbe
       *split_number = 1;
   }
 }
+
+DisplayError HWDeviceDRM::CancelDeferredPowerMode() {
+  DLOGI("Pending state reset %d on CRTC: %u", pending_power_state_, token_.crtc_id);
+  pending_power_state_ = kPowerStateNone;
+
+  return kErrorNone;
+}
+
 }  // namespace sdm

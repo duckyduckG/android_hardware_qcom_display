@@ -9,6 +9,7 @@ cc_library_shared {
 
     header_libs: [
         "display_headers",
+        "qti_kernel_headers",
     ],
     shared_libs: [
         "libqdMetaData",
@@ -36,15 +37,14 @@ cc_library_shared {
 //libgralloccore
 cc_library_shared {
     name: "libgralloccore",
-    defaults: [
-        "qtidisplay_defaults",
-    ],
+    defaults: ["qtidisplay_defaults"],
     sanitize: {
         integer_overflow: true,
     },
     vendor: true,
     header_libs: [
         "display_headers",
+        "qti_kernel_headers",
     ],
     include_dirs: [
         "system/memory/libion/include",
@@ -68,10 +68,6 @@ cc_library_shared {
         "-Wno-sign-conversion",
         "-Wno-unused-parameter",
     ],
-    export_cflags: select(soong_config_variable("qtidisplay", "gralloc_handle_has_reserved_size"), {
-        "true": ["-DGRALLOC_HANDLE_HAS_RESERVED_SIZE"],
-        default: [],
-    }),
     srcs: [
         "gr_allocator.cpp",
         "gr_buf_mgr.cpp",
@@ -89,7 +85,10 @@ cc_library_shared {
     vendor: true,
     relative_install_path: "hw",
 
-    header_libs: ["display_headers"],
+    header_libs: [
+        "display_headers",
+        "qti_kernel_headers",
+    ],
     shared_libs: [
         "libhidlbase",
         "libqdMetaData",
@@ -126,7 +125,10 @@ cc_library_shared {
     vendor: true,
     relative_install_path: "hw",
 
-    header_libs: ["display_headers"],
+    header_libs: [
+        "display_headers",
+        "qti_kernel_headers",
+    ],
     shared_libs: [
         "libhidlbase",
         "libqdMetaData",
@@ -165,7 +167,10 @@ cc_binary {
     },
     vendor: true,
     relative_install_path: "hw",
-    header_libs: ["display_headers"],
+    header_libs: [
+        "display_headers",
+        "qti_kernel_headers",
+    ],
     shared_libs: [
         "libhidlbase",
         "libqdMetaData",

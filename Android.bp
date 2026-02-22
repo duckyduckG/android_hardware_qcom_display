@@ -7,7 +7,6 @@ soong_config_module_type {
         "headless",
         "llvmsa",
         "gralloc4",
-        "udfps",
         "default",
     ],
     properties: [
@@ -45,9 +44,6 @@ qtidisplay_cc_defaults {
         gralloc4: {
             cflags: ["-DTARGET_USES_GRALLOC4"],
         },
-        udfps: {
-            cflags: ["-DUDFPS_ZPOS"],
-        },
     },
 }
 
@@ -83,6 +79,7 @@ cc_library_headers {
     vendor: true,
     export_include_dirs: [
         "include",
+        "libcopybit",
         "libdrmutils",
         "libqdutils",
         "libqservice",
@@ -117,3 +114,23 @@ cc_library_headers {
         "display_debug_headers",
     ],
 }
+
+subdirs = [
+    "init",
+    "libqservice",
+    "libqdutils",
+    "libddebug",
+    "libdrmutils",
+    "libmemtrack",
+    "libhistogram",
+    "liblight",
+    "composer",
+    "gralloc",
+    "gpu_tonemapper",
+    "hdmi_cec",
+    "sde-drm",
+    "sdm/libs/utils",
+    "sdm/libs/core",
+    "qmaa",
+    "libmemutils",
+]

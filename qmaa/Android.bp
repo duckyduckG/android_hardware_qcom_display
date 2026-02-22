@@ -3,7 +3,6 @@ soong_namespace {
         "hardware/qcom-caf/sm8350",
     ],
 }
-
 composer_srcs = ["*.cpp"]
 
 cc_binary {

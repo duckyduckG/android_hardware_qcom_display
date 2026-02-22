@@ -57,9 +57,22 @@
 #endif
 #define LOG_NDEBUG  0  // Define to enable LOGV
 
-#define DLOGI(...) do { ALOGD(__VA_ARGS__); printf(__VA_ARGS__); printf("\n"); } while (0)
-#define DLOGE(...) do { ALOGE(__VA_ARGS__); printf(__VA_ARGS__); printf("\n"); } while (0)
-#define DLOGW(...) do { ALOGW(__VA_ARGS__); printf(__VA_ARGS__); printf("\n"); } while (0)
+#ifndef LOGD
+#define LOGD ALOGD
+#endif
+#ifndef LOGE
+#define LOGE ALOGE
+#endif
+#ifndef LOGW
+#define LOGW ALOGW
+#endif
+#ifndef LOGI
+#define LOGI ALOGI
+#endif
+
+#define DLOGI(...) do { LOGD(__VA_ARGS__); printf(__VA_ARGS__); printf("\n"); } while (0)
+#define DLOGE(...) do { LOGE(__VA_ARGS__); printf(__VA_ARGS__); printf("\n"); } while (0)
+#define DLOGW(...) do { LOGW(__VA_ARGS__); printf(__VA_ARGS__); printf("\n"); } while (0)
 #else
 #define DLOGI(...) printf("%s  I: %s: ", LOG_TAG, __FUNCTION__);printf(__VA_ARGS__); printf("\n");
 #define DLOGE(...) printf("%s  E: %s: ", LOG_TAG, __FUNCTION__);printf(__VA_ARGS__); printf("\n");

@@ -250,10 +250,6 @@ class HWCDisplay : public DisplayEventHandler {
     return false;
   }
 
-  virtual bool HasOverridenDozeMode(void) {
-    return false;
-  }
-
   virtual bool HasSmartPanelConfig(void) {
     return false;
   }
