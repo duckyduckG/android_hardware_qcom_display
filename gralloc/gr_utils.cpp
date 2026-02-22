@@ -152,28 +152,7 @@ bool IsCompressedRGBFormat(int format) {
   return false;
 }
 
-bool IsCameraCustomFormat(int format, uint64_t usage) {
-  switch (format) {
-    case HAL_PIXEL_FORMAT_NV21_ZSL:
-    case HAL_PIXEL_FORMAT_NV12_LINEAR_FLEX:
-    case HAL_PIXEL_FORMAT_NV12_UBWC_FLEX:
-    case HAL_PIXEL_FORMAT_NV12_UBWC_FLEX_2_BATCH:
-    case HAL_PIXEL_FORMAT_NV12_UBWC_FLEX_4_BATCH:
-    case HAL_PIXEL_FORMAT_NV12_UBWC_FLEX_8_BATCH:
-    case HAL_PIXEL_FORMAT_MULTIPLANAR_FLEX:
-    case HAL_PIXEL_FORMAT_RAW_OPAQUE:
-    case HAL_PIXEL_FORMAT_RAW10:
-    case HAL_PIXEL_FORMAT_RAW12:
-      if (usage & GRALLOC_USAGE_HW_COMPOSER) {
-        ALOGW("%s: HW_Composer flag is set for camera custom format: 0x%x, Usage: 0x%" PRIx64,
-              __FUNCTION__, format, usage);
-        return false;
-      }
-      return true;
-    default:
-      break;
-  }
-
+bool IsCameraCustomFormat([[maybe_unused]] int format, uint64_t usage) {
   return false;
 }
 
