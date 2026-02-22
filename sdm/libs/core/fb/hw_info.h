@@ -28,7 +28,6 @@
 #include <core/sdm_types.h>
 #include <core/core_interface.h>
 #include <private/hw_info_types.h>
-#include <linux/msm_mdp.h>
 #include <bitset>
 
 #include "hw_info_interface.h"

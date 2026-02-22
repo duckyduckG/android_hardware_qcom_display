@@ -31,7 +31,7 @@
 #define __GR_ADRENO_INFO_H__
 
 #ifndef QMAA
-#include <media/msm_media_info.h>
+#include <vidc/media/msm_media_info.h>
 #endif
 
 #include "gr_utils.h"

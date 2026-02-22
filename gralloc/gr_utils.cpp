@@ -62,7 +62,7 @@
  */
 
 #ifndef QMAA
-#include <media/msm_media_info.h>
+#include <vidc/media/msm_media_info.h>
 #endif
 
 #include <drm/drm_fourcc.h>
